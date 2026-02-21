@@ -23,7 +23,7 @@ pipeline {
                 '''
             }
         }
-
+        //heath check
         stage('Health Check') {
             steps {
                 bat 'ping 127.0.0.1 -n 11 > nul'
