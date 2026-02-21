@@ -17,8 +17,10 @@ pipeline {
 
         stage('Build & Deploy') {
             steps {
-                bat 'docker-compose down || exit 0'
-                bat 'docker-compose up -d --build'
+                bat '''
+                docker-compose down --remove-orphans || exit 0
+                docker-compose up -d --build
+                '''
             }
         }
 
