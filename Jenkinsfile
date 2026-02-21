@@ -8,7 +8,7 @@ pipeline {
                 checkout scm
             }
         }
-
+        //SETUP ENVIROMENT
         stage('Setup Environment') {
             steps {
                 bat 'npm install'
