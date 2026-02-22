@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-# Copy app source
+# Copy App Source
 COPY . .
 
 EXPOSE 3000
