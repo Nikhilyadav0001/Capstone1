@@ -14,7 +14,7 @@ pipeline {
                 bat 'npm install'
             }
         }
-        //remove previous and build new conainer
+        //remove previous and build new Contaner 
         stage('Build & Deploy') {
             steps {
                 bat '''
