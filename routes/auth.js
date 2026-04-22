@@ -79,6 +79,16 @@ router.post('/signup', ensureGuest, async (req, res) => {
   }
 });
 
+// ──── Google OAuth ────
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login', failureFlash: true }),
+  (req, res) => {
+    res.redirect('/dashboard');
+  }
+);
+
 // ──── Logout ────
 router.get('/logout', (req, res, next) => {
   req.logout(err => {

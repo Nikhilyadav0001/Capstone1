@@ -52,16 +52,56 @@ passport.use(new LocalStrategy(
   }
 ));
 
-// Google strategy (omitted/unchanged logic)
+// Google strategy implementation
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your-google-client-id') {
   passport.use(new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL
+      callbackURL: process.env.GOOGLE_CALLBACK_URL || '/auth/google/callback'
     },
     async (accessToken, refreshToken, profile, done) => {
-        // ... (Google logic remains the same, will only work if online)
+      try {
+        if (mongoose.connection.readyState === 1) {
+          // 1. Check if user already exists by googleId
+          let user = await User.findOne({ googleId: profile.id });
+          
+          if (user) {
+            return done(null, user);
+          }
+
+          // 2. Check if user exists by email (to link account)
+          user = await User.findOne({ email: profile.emails[0].value });
+
+          if (user) {
+            user.googleId = profile.id;
+            if (!user.avatar) user.avatar = profile.photos[0].value;
+            await user.save();
+            return done(null, user);
+          }
+
+          // 3. Create new user
+          const newUser = {
+            googleId: profile.id,
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            avatar: profile.photos[0].value
+          };
+
+          user = await User.create(newUser);
+          return done(null, user);
+        } else {
+          // Offline mode fallback for Google
+          return done(null, { 
+            _id: 'google_' + profile.id, 
+            id: profile.id, 
+            name: profile.displayName, 
+            email: profile.emails[0].value 
+          });
+        }
+      } catch (err) {
+        return done(err);
+      }
     }
   ));
 }
