@@ -2,10 +2,29 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const MongoStore = require('connect-mongo').default;
 const flash = require('express-flash');
 const passport = require('./config/passport');
+
+// Verify Environment Variables
+const keys = {
+  UNSPLASH: !!process.env.UNSPLASH_ACCESS_KEY,
+  GEMINI: !!process.env.GEMINI_API_KEY,
+  SESSION: !!process.env.SESSION_SECRET
+};
+
+console.log('--- 🛡️  Service Status ---');
+console.log(`Unsplash Key: ${keys.UNSPLASH ? '✅ Loaded' : '❌ Missing'}`);
+console.log(`Gemini Key:   ${keys.GEMINI ? '✅ Loaded' : '❌ Missing'}`);
+console.log(`Session Sec:  ${keys.SESSION ? '✅ Loaded' : '❌ Missing'}`);
+console.log('-------------------------');
+
 const authRoutes = require('./routes/auth');
+const aiRoutes = require('./routes/ai');
+const travelRoutes = require('./routes/travel');
+const placesRoutes = require('./routes/places');
+
+const photoService = require('./services/photoService');
+const aiService = require('./services/aiService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,37 +42,48 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/loginpage',
-    collectionName: 'sessions'
-  }),
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
+  cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
 // ──── Passport ────
 app.use(passport.initialize());
 app.use(passport.session());
-
-// ──── Flash messages ────
 app.use(flash());
+
+// ──── Health Check Route ────
+app.get('/health', async (req, res) => {
+  const [unsplash, gemini] = await Promise.all([
+    photoService.checkHealth(),
+    aiService.checkHealth()
+  ]);
+  
+  res.json({
+    unsplash,
+    gemini,
+    env: (keys.UNSPLASH && keys.GEMINI) ? 'OK' : 'MISSING',
+    db: mongoose.connection.readyState === 1 ? 'OK' : 'OFFLINE'
+  });
+});
 
 // ──── Routes ────
 app.use('/', authRoutes);
+app.use('/ai', aiRoutes);
+app.use('/travel', travelRoutes);
+app.use('/places', placesRoutes);
 
-// ──── Health check (for Docker / Jenkins) ────
-app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+// ──── Start server ────
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  if (mongoose.connection.readyState !== 1) {
+    console.log('⚠️ Running in OFFLINE mode (No MongoDB)');
+  }
+});
 
-// ──── Connect to MongoDB & start server ────
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/loginpage')
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+// Background DB connection
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch(err => console.log('ℹ️ MongoDB not connected (Background)'));
+}
 
 module.exports = app;

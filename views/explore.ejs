@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+
+<div class="container" style="padding-top: 4rem;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 3rem; text-align: center;">Discover Your Next Destination</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Destination Card 1 -->
+        <div class="glass-card animate-fade" style="padding: 0; overflow: hidden; height: 400px; position: relative;">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 60%);"></div>
+            <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Kyoto, Japan</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Temples, gardens, and traditional tea houses await.</p>
+                <a href="/travel/new?dest=Kyoto" class="btn btn-primary" style="width: 100%; justify-content: center;">Plan Trip</a>
+            </div>
+        </div>
+
+        <!-- Destination Card 2 -->
+        <div class="glass-card animate-fade" style="padding: 0; overflow: hidden; height: 400px; position: relative; animation-delay: 0.1s;">
+            <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 60%);"></div>
+            <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">London, UK</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">History, culture, and vibrant city life.</p>
+                <a href="/travel/new?dest=London" class="btn btn-primary" style="width: 100%; justify-content: center;">Plan Trip</a>
+            </div>
+        </div>
+
+        <!-- Destination Card 3 -->
+        <div class="glass-card animate-fade" style="padding: 0; overflow: hidden; height: 400px; position: relative; animation-delay: 0.2s;">
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 60%);"></div>
+            <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Paris, France</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">The city of lights and romance.</p>
+                <a href="/travel/new?dest=Paris" class="btn btn-primary" style="width: 100%; justify-content: center;">Plan Trip</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

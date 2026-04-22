@@ -1,190 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Overview</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #34458f;
-      --bg-gradient: radial-gradient(circle at top left, #1e1b4b, #0f172a);
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-main: #f8fafc;
-      --text-dim: #94a3b8;
-    }
+<%- include('partials/header') %>
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
-    body {
-      background: var(--bg-gradient);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-main);
-    }
-
-    .dashboard-container {
-      width: 100%;
-      max-width: 500px;
-      padding: 20px;
-      animation: zoomIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes zoomIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .profile-card {
-      background: var(--glass);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border: 1px solid var(--glass-border);
-      border-radius: 32px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.4);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Decorative element */
-    .profile-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 4px;
-      background: linear-gradient(90deg, var(--primary), #a855f7);
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 24px;
-    }
-
-    .avatar {
-      width: 100%;
-      height: 100%;
-      border-radius: 30px;
-      background: linear-gradient(135deg, var(--primary), #a855f7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 42px;
-      font-weight: 700;
-      color: white;
-      box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
-      border: 3px solid rgba(255,255,255,0.1);
-      overflow: hidden;
-    }
-
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-    .status-badge {
-      position: absolute;
-      bottom: -5px;
-      right: -5px;
-      background: #22c55e;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 3px solid #161b33;
-    }
-
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    .email-label { color: var(--text-dim); font-size: 15px; margin-bottom: 32px; display: block; }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .stat-item {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 16px 20px;
-      border-radius: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid var(--glass-border);
-      transition: background 0.3s;
-    }
-
-    .stat-item:hover { background: rgba(255, 255, 255, 0.06); }
-
-    .stat-label { color: var(--text-dim); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-weight: 600; color: var(--text-main); font-size: 15px; }
-
-    .method-tag {
-      padding: 4px 10px;
-      background: rgba(99, 102, 241, 0.15);
-      color: #a5b4fc;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .btn-logout {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: rgba(239, 68, 68, 0.1);
-      color: #fca5a5;
-      text-decoration: none;
-      border-radius: 16px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .btn-logout:hover {
-      background: #ef4444;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
-    }
-  </style>
-</head>
-<body>
-  <div class="dashboard-container">
-    <div class="profile-card">
-      <div class="avatar-wrapper">
-        <div class="avatar">
-          <% if (user.avatar) { %>
-            <img src="<%= user.avatar %>" alt="avatar" />
-          <% } else { %>
-            <%= user.name.charAt(0).toUpperCase() %>
-          <% } %>
+<div class="container" style="padding-top: 4rem; padding-bottom: 5rem;">
+    <!-- Welcome Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem;">
+        <div class="animate-fade">
+            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Hello, <%= user.name %>!
+            </h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 12px; height: 12px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981;"></span>
+                You have <span id="tripCount" style="color: white; font-weight: 600;">...</span> adventures waiting for you.
+            </p>
         </div>
-        <div class="status-badge"></div>
-      </div>
-
-      <h1><%= user.name %></h1>
-      <span class="email-label"><%= user.email %></span>
-
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-label">Member Status</span>
-          <span class="stat-value"><span class="method-tag">Verified</span></span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Authentication</span>
-          <span class="stat-value"><%= user.googleId ? 'Google Cloud' : 'Native Auth' %></span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Joined On</span>
-          <span class="stat-value"><%= new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
-        </div>
-      </div>
-
-      <a href="/logout" class="btn-logout">Sign Out of Session</a>
+        <a href="/travel/new" class="btn btn-primary" style="padding: 1rem 2rem; border-radius: 16px; font-weight: 600; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);">
+            <i class="fas fa-plus"></i> Plan New Journey
+        </a>
     </div>
-  </div>
-</body>
-</html>
+
+    <!-- Stats Overview -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
+        <div class="glass-card animate-fade" style="padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; border-radius: 24px;">
+            <div style="width: 50px; height: 50px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                <i class="fas fa-globe-americas fa-lg"></i>
+            </div>
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Destinations</p>
+                <h4 id="statDest" style="font-size: 1.5rem; font-weight: 700;">--</h4>
+            </div>
+        </div>
+        <div class="glass-card animate-fade" style="padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; border-radius: 24px; animation-delay: 0.1s;">
+            <div style="width: 50px; height: 50px; background: rgba(236, 72, 153, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ec4899;">
+                <i class="fas fa-route fa-lg"></i>
+            </div>
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Total Trips</p>
+                <h4 id="statTrips" style="font-size: 1.5rem; font-weight: 700;">--</h4>
+            </div>
+        </div>
+        <div class="glass-card animate-fade" style="padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; border-radius: 24px; animation-delay: 0.2s;">
+            <div style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #10b981;">
+                <i class="fas fa-user-friends fa-lg"></i>
+            </div>
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Travelers</p>
+                <h4 id="statTravelers" style="font-size: 1.5rem; font-weight: 700;">--</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trips Grid -->
+    <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 2rem;">Recent Adventures</h2>
+    <div id="tripsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2.5rem;">
+        <!-- Loading State -->
+        <div class="glass-card" style="grid-column: 1/-1; text-align: center; padding: 6rem;">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary); margin-bottom: 1.5rem;"></i>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Syncing your travel coordinates...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadTrips() {
+        try {
+            const response = await fetch('/travel/api/list');
+            const data = await response.json();
+            const container = document.getElementById('tripsList');
+            const countElem = document.getElementById('tripCount');
+            
+            if (data.success && data.trips.length > 0) {
+                countElem.innerText = data.trips.length;
+                document.getElementById('statTrips').innerText = data.trips.length;
+                document.getElementById('statDest').innerText = [...new Set(data.trips.map(t => t.destination))].length;
+                document.getElementById('statTravelers').innerText = data.trips.reduce((acc, t) => acc + (parseInt(t.travelers) || 1), 0);
+
+                container.innerHTML = data.trips.map((trip, idx) => `
+                    <div class="glass-card animate-fade" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; border-radius: 28px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation-delay: ${idx * 0.1}s;" 
+                        onmouseover="this.style.transform='translateY(-10px)'" 
+                        onmouseout="this.style.transform='translateY(0)'">
+                        
+                        <div style="height: 180px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(236, 72, 153, 0.8)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=400&q=80'); background-size: cover; background-blend-mode: overlay; display: flex; align-items: center; justify-content: center; color: white; font-size: 3.5rem;">
+                            <i class="fas fa-earth-asia"></i>
+                        </div>
+                        
+                        <div style="padding: 2rem;">
+                            <h3 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.8rem; color: #fff;">${trip.destination}</h3>
+                            <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
+                                <div style="display: flex; align-items: center; gap: 0.8rem; color: var(--text-muted); font-size: 0.95rem;">
+                                    <i class="far fa-calendar-alt" style="color: var(--primary);"></i>
+                                    ${new Date(trip.dates.start).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} - 
+                                    ${new Date(trip.dates.end).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.8rem; color: var(--text-muted); font-size: 0.95rem;">
+                                    <i class="fas fa-users" style="color: var(--primary);"></i>
+                                    ${trip.travelers} Traveler(s)
+                                </div>
+                            </div>
+                            <a href="/travel/${trip._id}" class="btn btn-outline" style="width: 100%; justify-content: center; border-radius: 14px; padding: 0.9rem; font-weight: 600; border-width: 2px;">
+                                Details <i class="fas fa-chevron-right" style="font-size: 0.8rem; margin-left: 0.5rem;"></i>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                countElem.innerText = '0';
+                document.getElementById('statTrips').innerText = '0';
+                document.getElementById('statDest').innerText = '0';
+                document.getElementById('statTravelers').innerText = '0';
+                container.innerHTML = `
+                    <div class="glass-card animate-fade" style="grid-column: 1/-1; text-align: center; padding: 6rem; border-radius: 32px;">
+                        <div style="width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+                            <i class="fas fa-map-marked fa-3x" style="color: var(--text-muted); opacity: 0.3;"></i>
+                        </div>
+                        <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">Your Passport is Empty</h3>
+                        <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 400px; margin: 0 auto 2.5rem;">Ready to start exploring? Create your first AI-guided journey and see the world!</p>
+                        <a href="/travel/new" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 16px; font-weight: 600;">Plan a Trip</a>
+                    </div>
+                `;
+            }
+        } catch (err) {
+            document.getElementById('tripsList').innerHTML = '<p>Connection lost. Please refresh.</p>';
+        }
+    }
+
+    loadTrips();
+</script>
+
+<%- include('partials/footer') %>

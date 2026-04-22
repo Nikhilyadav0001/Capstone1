@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+
+<!-- Stunning Hero Section -->
+<div style="position: relative; overflow: hidden; padding: 8rem 0 6rem;">
+    <!-- Animated background glows -->
+    <div style="position: absolute; top: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%); filter: blur(60px); animation: float 10s infinite alternate;"></div>
+    <div style="position: absolute; bottom: 0; right: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%); filter: blur(80px); animation: float 12s infinite alternate-reverse;"></div>
+
+    <div class="container" style="text-align: center; position: relative; z-index: 1;">
+        <div class="animate-fade" style="display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.05); padding: 0.5rem 1.5rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 2.5rem; backdrop-filter: blur(10px);">
+            <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></span>
+            <span style="font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #94a3b8;">Now Powered by Gemini 2.5</span>
+        </div>
+
+        <h1 class="animate-fade" style="font-size: 5rem; line-height: 1.05; margin-bottom: 2rem; font-weight: 900; letter-spacing: -0.04em;">
+            The Future of Travel <br>
+            <span style="background: linear-gradient(135deg, #818cf8 0%, #ec4899 50%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 10px 20px rgba(236, 72, 153, 0.2));">Driven by Pure AI.</span>
+        </h1>
+
+        <p class="animate-fade" style="font-size: 1.4rem; color: #94a3b8; max-width: 800px; margin: 0 auto 4rem; line-height: 1.6; animation-delay: 0.1s;">
+            Ditch the generic guides. Get hyper-personalized itineraries, discover ultra-local secrets, and manage your entire journey through a stunning, glass-morphic interface.
+        </p>
+
+        <div class="animate-fade" style="animation-delay: 0.2s; display: flex; align-items: center; justify-content: center; gap: 1.5rem;">
+            <a href="/travel/new" class="btn btn-primary" style="padding: 1.2rem 3rem; font-size: 1.2rem; border-radius: 20px; font-weight: 700; box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.5);">
+                Start Your Journey <i class="fas fa-chevron-right" style="margin-left: 0.8rem; font-size: 1rem;"></i>
+            </a>
+            <a href="/explore" class="btn btn-outline" style="padding: 1.2rem 3rem; font-size: 1.2rem; border-radius: 20px; font-weight: 700; border-width: 2px;">
+                Explore Now
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Grid -->
+<div class="container" style="padding-bottom: 8rem;">
+    <div class="animate-fade" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; animation-delay: 0.3s;">
+        <!-- Feature 1 -->
+        <div class="glass-card" style="padding: 3rem; border-radius: 40px; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-15px)'; this.style.borderColor='var(--primary)'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--glass-border)'">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05)); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.2);">
+                <i class="fas fa-brain fa-2x"></i>
+            </div>
+            <h3 style="font-size: 1.6rem; margin-bottom: 1rem; font-weight: 700;">Deep AI Planning</h3>
+            <p style="color: #64748b; line-height: 1.6; font-size: 1.05rem;">Our neural engine doesn't just list spots—it understands your vibe, interests, and timing to build the perfect day.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-card" style="padding: 3rem; border-radius: 40px; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-15px)'; this.style.borderColor='#ec4899'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--glass-border)'">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(236, 72, 153, 0.05)); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.2);">
+                <i class="fas fa-compass fa-2x"></i>
+            </div>
+            <h3 style="font-size: 1.6rem; margin-bottom: 1rem; font-weight: 700;">Zero Key Discovery</h3>
+            <p style="color: #64748b; line-height: 1.6; font-size: 1.05rem;">Experience maps, weather, and localized imagery without worrying about API keys. It just works.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-card" style="padding: 3rem; border-radius: 40px; transition: all 0.4s ease;" onmouseover="this.style.transform='translateY(-15px)'; this.style.borderColor='#10b981'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--glass-border)'">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05)); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);">
+                <i class="fas fa-shield-halved fa-2x"></i>
+            </div>
+            <h3 style="font-size: 1.6rem; margin-bottom: 1rem; font-weight: 700;">Local-First Secure</h3>
+            <p style="color: #64748b; line-height: 1.6; font-size: 1.05rem;">Running in offline mode or connected to our secure cloud—your travel data stays yours, always.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(20px, -20px) scale(1.1); }
+    }
+</style>
+
+<%- include('partials/footer') %>
