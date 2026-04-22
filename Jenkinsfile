@@ -9,17 +9,26 @@ pipeline {
             }
         }
 
+        // Install dependencies
         stage('Setup Environment') {
             steps {
                 bat 'npm install'
             }
         }
 
-        // Load .env + run docker
+        // Copy .env + Build & Deploy
         stage('Build & Deploy') {
             steps {
                 bat '''
-                echo Using .env file...
+                echo ===============================
+                echo Copying .env file...
+                echo ===============================
+
+                copy loginpage\\loginpage\\.env .env
+
+                echo ===============================
+                echo Starting Docker...
+                echo ===============================
 
                 docker-compose down --remove-orphans || exit 0
                 docker-compose --env-file .env up -d --build
@@ -27,9 +36,10 @@ pipeline {
             }
         }
 
+        // Health check
         stage('Health Check') {
             steps {
-                bat 'ping 127.0.0.1 -n 11 > nul'
+                bat 'ping 127.0.0.1 -n 10 > nul'
                 bat 'curl -f http://localhost:3000/health || exit 1'
             }
         }
@@ -37,10 +47,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo '✅ Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo '❌ Pipeline failed!'
         }
     }
 }
