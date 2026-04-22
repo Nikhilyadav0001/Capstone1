@@ -53,8 +53,7 @@ passport.use(new LocalStrategy(
 ));
 
 // Google strategy implementation
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your-google-client-id') {
-  passport.use(new GoogleStrategy(
+passport.use(new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -104,6 +103,5 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== 'your-googl
       }
     }
   ));
-}
 
 module.exports = passport;
