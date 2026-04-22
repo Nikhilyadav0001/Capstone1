@@ -16,6 +16,14 @@ pipeline {
         }
         //remove previous and build new Contaner 
         stage('Build & Deploy') {
+            environment {
+                // These should be configured in Jenkins Credentials
+                GEMINI_API_KEY = credentials('GEMINI_API_KEY')
+                UNSPLASH_ACCESS_KEY = credentials('UNSPLASH_ACCESS_KEY')
+                GOOGLE_CLIENT_ID = credentials('GOOGLE_CLIENT_ID')
+                GOOGLE_CLIENT_SECRET = credentials('GOOGLE_CLIENT_SECRET')
+                SESSION_SECRET = 'your-session-secret-here'
+            }
             steps {
                 bat '''
                 docker-compose down --remove-orphans || exit 0
