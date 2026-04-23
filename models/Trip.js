@@ -9,6 +9,15 @@ const tripSchema = new mongoose.Schema({
   },
   budget: { type: Number },
   travelers: { type: Number, default: 1 },
+  costBreakdown: {
+    flights: { type: Number, default: 0 },
+    accommodation: { type: Number, default: 0 },
+    food: { type: Number, default: 0 },
+    activities: { type: Number, default: 0 },
+    transportation: { type: Number, default: 0 },
+    other: { type: Number, default: 0 }
+  },
+  costAnalysis: { type: String },
   itinerary: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Itinerary' }]
 }, { timestamps: true });
 

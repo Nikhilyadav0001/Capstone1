@@ -99,8 +99,86 @@
                 </button>
             </form>
         </div>
-    </div>
-</div>
+
+        <!-- Cost Analysis Section -->
+        <% if (trip.costBreakdown && Object.values(trip.costBreakdown).some(v => v > 0)) { %>
+        <div class="glass-card animate-fade" style="margin-bottom: 2rem; border: 1px solid rgba(34, 197, 94, 0.3);">
+            <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem;">
+                <i class="fas fa-calculator" style="color: #22c55e; font-size: 1.3rem;"></i>
+                <h2>Trip Cost Analysis</h2>
+            </div>
+            
+            <!-- Cost Breakdown Chart -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <% const costs = trip.costBreakdown; %>
+                <% if (costs.flights > 0) { %>
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.2rem; color: #3b82f6;">✈️</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Flights</p>
+                    <p style="color: white; font-weight: 600; font-size: 1.1rem;">$<%= costs.flights.toFixed(2) %></p>
+                </div>
+                <% } %>
+                
+                <% if (costs.accommodation > 0) { %>
+                <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.2rem;">🏨</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Accommodation</p>
+                    <p style="color: white; font-weight: 600; font-size: 1.1rem;">$<%= costs.accommodation.toFixed(2) %></p>
+                </div>
+                <% } %>
+                
+                <% if (costs.food > 0) { %>
+                <div style="background: rgba(34, 197, 94, 0.1); padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.2rem;">🍽️</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Food & Dining</p>
+                    <p style="color: white; font-weight: 600; font-size: 1.1rem;">$<%= costs.food.toFixed(2) %></p>
+                </div>
+                <% } %>
+                
+                <% if (costs.activities > 0) { %>
+                <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.2rem;">🎭</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Activities</p>
+                    <p style="color: white; font-weight: 600; font-size: 1.1rem;">$<%= costs.activities.toFixed(2) %></p>
+                </div>
+                <% } %>
+                
+                <% if (costs.transportation > 0) { %>
+                <div style="background: rgba(236, 72, 153, 0.1); padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.2rem;">🚗</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Transportation</p>
+                    <p style="color: white; font-weight: 600; font-size: 1.1rem;">$<%= costs.transportation.toFixed(2) %></p>
+                </div>
+                <% } %>
+                
+                <% if (costs.other > 0) { %>
+                <div style="background: rgba(156, 163, 175, 0.1); padding: 1rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 1.2rem;">📦</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Other</p>
+                    <p style="color: white; font-weight: 600; font-size: 1.1rem;">$<%= costs.other.toFixed(2) %></p>
+                </div>
+                <% } %>
+            </div>
+            
+            <!-- Total Cost Summary -->
+            <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0 0 0.5rem 0;">Total Trip Cost</p>
+                <p style="color: #22c55e; font-weight: 700; font-size: 1.8rem; margin: 0;">$<%= (costs.flights + costs.accommodation + costs.food + costs.activities + costs.transportation + costs.other).toFixed(2) %></p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0 0 0;">Per Person: $<%= ((costs.flights + costs.accommodation + costs.food + costs.activities + costs.transportation + costs.other) / trip.travelers).toFixed(2) %></p>
+            </div>
+            
+            <% if (trip.costAnalysis) { %>
+            <!-- AI Analysis Results -->
+            <div style="background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; padding: 1.2rem; border-radius: 8px;">
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;">
+                    <i class="fas fa-lightbulb" style="color: #22c55e;"></i>
+                    <h3 style="color: white; margin: 0; font-size: 1.1rem;">AI Cost Insights</h3>
+                </div>
+                <div style="color: #cbd5e1; line-height: 1.8; white-space: pre-wrap; font-size: 0.95rem;"><%= trip.costAnalysis %></div>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
 
 <script>
     // ──── LEAFLET MAP INITIALIZATION ────

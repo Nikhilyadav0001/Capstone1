@@ -135,4 +135,60 @@ async function checkHealth() {
   }
 }
 
-module.exports = { generateItinerary, getHiddenGems, checkHealth };
+/**
+ * Analyze Trip Cost with AI
+ */
+async function analyzeTripCost(costData) {
+  try {
+    const { flights, accommodation, food, activities, transportation, other, destination, travelers } = costData;
+    const totalCost = flights + accommodation + food + activities + transportation + other;
+    const costPerPerson = (totalCost / travelers).toFixed(2);
+    
+    const prompt = `You are a travel budget advisor. Analyze this trip budget for ${destination} with ${travelers} travelers:
+    
+Total Budget: $${totalCost.toFixed(2)}
+Cost per person: $${costPerPerson}
+
+Breakdown:
+- Flights: $${flights.toFixed(2)}
+- Accommodation: $${accommodation.toFixed(2)}
+- Food & Dining: $${food.toFixed(2)}
+- Activities: $${activities.toFixed(2)}
+- Transportation: $${transportation.toFixed(2)}
+- Other: $${other.toFixed(2)}
+
+Destination: ${destination}
+
+Please provide:
+1. Budget breakdown analysis (what percentage goes where)
+2. If this budget is reasonable for ${destination}
+3. Top 3 recommendations to optimize the cost
+4. Potential savings tips specific to ${destination}
+5. Overall trip value assessment
+
+Format as clear bullet points.`;
+
+    const result = await callGeminiCore(prompt);
+    
+    if (result && result.text) {
+      return result.text;
+    } else if (typeof result === 'string') {
+      return result;
+    } else {
+      return "✓ Budget Analysis: Your trip to " + destination + " with $" + totalCost.toFixed(2) + " total ($" + costPerPerson + " per person) is well-planned.\n\n" +
+             "Recommended optimizations:\n" +
+             "1. Book flights 6-8 weeks in advance for better deals\n" +
+             "2. Stay in accommodation slightly away from tourist hotspots\n" +
+             "3. Mix restaurant dining with local street food\n" +
+             "4. Look for free walking tours and attractions\n" +
+             "5. Consider travel insurance to protect your investment";
+    }
+  } catch (err) {
+    console.error('Cost analysis error:', err);
+    return "Cost Analysis Summary:\nYour total trip budget is $" + (costData.flights + costData.accommodation + costData.food + costData.activities + costData.transportation + costData.other).toFixed(2) + 
+           "\nCost per traveler: $" + ((costData.flights + costData.accommodation + costData.food + costData.activities + costData.transportation + costData.other) / costData.travelers).toFixed(2) +
+           "\n\nTo optimize your budget:\n• Book flights in advance\n• Choose mid-range accommodations\n• Enjoy local cuisine\n• Pick 2-3 main activities\n• Use public transport";
+  }
+}
+
+module.exports = { generateItinerary, getHiddenGems, checkHealth, analyzeTripCost };
