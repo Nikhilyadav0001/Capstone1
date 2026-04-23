@@ -16,6 +16,10 @@
             <i class="fas fa-plus"></i> Plan New Journey
         </a>
     </div>
+    
+    <!-- Last Generated AI Cost Analysis (from form) -->
+    <div id="lastAnalysisCardContainer" style="margin-bottom: 2rem; display: none;"></div>
+
 
     <!-- Stats Overview -->
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
@@ -123,6 +127,37 @@
     }
 
     loadTrips();
+
+    // Show last AI cost analysis saved from the trip form (if any)
+    (function showLastAnalysis() {
+        try {
+            const analysis = localStorage.getItem('lastCostAnalysis');
+            if (!analysis) return;
+            const container = document.getElementById('lastAnalysisCardContainer');
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="glass-card animate-fade" style="padding: 1.5rem; border-radius: 20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:0.8rem;">
+                        <div style="display:flex; align-items:center; gap:0.8rem;">
+                            <i class="fas fa-brain" style="color: #8b5cf6; font-size: 1.2rem;"></i>
+                            <h3 style="color: white; font-weight: 700; margin: 0;">Recent AI Cost Analysis</h3>
+                        </div>
+                        <div>
+                            <button id="clearAnalysisBtn" class="btn btn-outline" style="border-radius: 12px; padding: 0.6rem 0.9rem;">Clear</button>
+                        </div>
+                    </div>
+                    <div style="color:#cbd5e1; white-space: pre-wrap; line-height:1.6;">${analysis}</div>
+                </div>
+            `;
+
+            document.getElementById('clearAnalysisBtn').addEventListener('click', function() {
+                localStorage.removeItem('lastCostAnalysis');
+                document.getElementById('lastAnalysisCardContainer').style.display = 'none';
+            });
+        } catch (e) {
+            // no-op
+        }
+    })();
 </script>
 
 <%- include('partials/footer') %>

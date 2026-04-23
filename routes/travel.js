@@ -21,7 +21,7 @@ router.get('/new', ensureAuth, (req, res) => {
 // Create a new trip
 router.post('/', ensureAuth, async (req, res) => {
   try {
-    const { destination, startDate, endDate, travelers, costFlights, costAccommodation, costFood, costActivities, costTransportation, costOther, costAnalysis } = req.body;
+    const { destination, startDate, endDate, travelers, accommodationType, costFlights, costAccommodation, costFood, costActivities, costTransportation, costOther, costAnalysis } = req.body;
     
     if (mongoose.connection.readyState === 1) {
       const trip = new Trip({
@@ -29,6 +29,7 @@ router.post('/', ensureAuth, async (req, res) => {
         destination,
         dates: { start: new Date(startDate), end: new Date(endDate) },
         travelers,
+        accommodationType: accommodationType || 'moderate',
         costBreakdown: {
           flights: parseFloat(costFlights) || 0,
           accommodation: parseFloat(costAccommodation) || 0,
@@ -49,6 +50,7 @@ router.post('/', ensureAuth, async (req, res) => {
         destination,
         dates: { start: new Date(startDate), end: new Date(endDate) },
         travelers,
+        accommodationType: accommodationType || 'moderate',
         costBreakdown: {
           flights: parseFloat(costFlights) || 0,
           accommodation: parseFloat(costAccommodation) || 0,
@@ -107,7 +109,7 @@ router.get('/api/list', ensureAuth, async (req, res) => {
 // API: Analyze trip cost with AI
 router.post('/analyze-cost', ensureAuth, async (req, res) => {
   try {
-    const { flights, accommodation, food, activities, transportation, other, destination, travelers } = req.body;
+    const { flights, accommodation, food, activities, transportation, other, destination, travelers, accommodationType } = req.body;
     
     const costData = {
       flights: parseFloat(flights) || 0,
@@ -117,7 +119,8 @@ router.post('/analyze-cost', ensureAuth, async (req, res) => {
       transportation: parseFloat(transportation) || 0,
       other: parseFloat(other) || 0,
       destination,
-      travelers: parseInt(travelers) || 1
+      travelers: parseInt(travelers) || 1,
+      accommodationType: accommodationType || 'moderate'
     };
     
     const totalCost = costData.flights + costData.accommodation + costData.food + costData.activities + costData.transportation + costData.other;

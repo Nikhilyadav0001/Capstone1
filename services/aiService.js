@@ -140,33 +140,33 @@ async function checkHealth() {
  */
 async function analyzeTripCost(costData) {
   try {
-    const { flights, accommodation, food, activities, transportation, other, destination, travelers } = costData;
-    const totalCost = flights + accommodation + food + activities + transportation + other;
-    const costPerPerson = (totalCost / travelers).toFixed(2);
+    const { totalCost, budgetType, destination, travelers } = costData;
+    const costPerPerson = (totalCost / Math.max(1, travelers)).toFixed(2);
     
-    const prompt = `You are a travel budget advisor. Analyze this trip budget for ${destination} with ${travelers} travelers:
+    const budgetDescriptions = {
+      economy: 'budget-friendly/backpacker style',
+      moderate: 'mid-range/balanced comfort style',
+      luxury: 'premium/luxury experience style'
+    };
     
-Total Budget: $${totalCost.toFixed(2)}
-Cost per person: $${costPerPerson}
+    const prompt = `You are a travel budget advisor. Analyze this trip budget for ${destination}:
+    
+Trip Details:
+- Destination: ${destination}
+- Total Budget: $${totalCost.toFixed(2)}
+- Cost per person: $${costPerPerson}
+- Number of travelers: ${travelers}
+- Travel Style: ${budgetDescriptions[budgetType] || budgetType}
 
-Breakdown:
-- Flights: $${flights.toFixed(2)}
-- Accommodation: $${accommodation.toFixed(2)}
-- Food & Dining: $${food.toFixed(2)}
-- Activities: $${activities.toFixed(2)}
-- Transportation: $${transportation.toFixed(2)}
-- Other: $${other.toFixed(2)}
+Based on this total budget of $${totalCost.toFixed(2)} for ${travelers} traveler(s) traveling to ${destination} in a ${budgetType} style:
 
-Destination: ${destination}
+1. Budget Adequacy: Is this budget sufficient for a ${budgetType} trip to ${destination}?
+2. Budget Distribution: Suggest how to allocate this budget across flights, accommodation, food, activities, and local transport
+3. Daily Budget: Calculate the daily per-person budget and assess if it's realistic
+4. Top 5 Money-Saving Tips: Specific recommendations for ${destination} travel
+5. What you can expect: Quality/experience level for this budget in ${destination}
 
-Please provide:
-1. Budget breakdown analysis (what percentage goes where)
-2. If this budget is reasonable for ${destination}
-3. Top 3 recommendations to optimize the cost
-4. Potential savings tips specific to ${destination}
-5. Overall trip value assessment
-
-Format as clear bullet points.`;
+Be practical and specific to ${destination}. Format as clear bullet points.`;
 
     const result = await callGeminiCore(prompt);
     
@@ -175,19 +175,42 @@ Format as clear bullet points.`;
     } else if (typeof result === 'string') {
       return result;
     } else {
-      return "✓ Budget Analysis: Your trip to " + destination + " with $" + totalCost.toFixed(2) + " total ($" + costPerPerson + " per person) is well-planned.\n\n" +
-             "Recommended optimizations:\n" +
-             "1. Book flights 6-8 weeks in advance for better deals\n" +
-             "2. Stay in accommodation slightly away from tourist hotspots\n" +
-             "3. Mix restaurant dining with local street food\n" +
-             "4. Look for free walking tours and attractions\n" +
-             "5. Consider travel insurance to protect your investment";
+      return "✓ Budget Analysis for " + destination + "\n\n" +
+             "Total Budget: $" + totalCost.toFixed(2) + "\n" +
+             "Per Person: $" + costPerPerson + "\n" +
+             "Travel Style: " + (budgetType || 'moderate') + "\n\n" +
+             "Budget Breakdown Suggestion:\n" +
+             "• Flights: 35-45% ($" + (totalCost * 0.40).toFixed(2) + ")\n" +
+             "• Accommodation: 30-35% ($" + (totalCost * 0.33).toFixed(2) + ")\n" +
+             "• Food & Activities: 15-20% ($" + (totalCost * 0.18).toFixed(2) + ")\n" +
+             "• Local Transport & Misc: 5-10% ($" + (totalCost * 0.06).toFixed(2) + ")\n\n" +
+             "Daily Per-Person Budget: $" + (costPerPerson / 7).toFixed(2) + " (assuming 7-day trip)\n\n" +
+             "Top Tips:\n" +
+             "• Book flights in advance and use price trackers\n" +
+             "• Choose accommodations by comfort level and location\n" +
+             "• Mix local eateries with occasional dining splurges\n" +
+             "• Use public transport and look for city passes\n" +
+             "• Travel during shoulder season for significant savings";
     }
   } catch (err) {
     console.error('Cost analysis error:', err);
-    return "Cost Analysis Summary:\nYour total trip budget is $" + (costData.flights + costData.accommodation + costData.food + costData.activities + costData.transportation + costData.other).toFixed(2) + 
-           "\nCost per traveler: $" + ((costData.flights + costData.accommodation + costData.food + costData.activities + costData.transportation + costData.other) / costData.travelers).toFixed(2) +
-           "\n\nTo optimize your budget:\n• Book flights in advance\n• Choose mid-range accommodations\n• Enjoy local cuisine\n• Pick 2-3 main activities\n• Use public transport";
+    const totalCost = costData.totalCost || 0;
+    const costPerPerson = ((totalCost) / Math.max(1, costData.travelers)).toFixed(2);
+    return "Budget Analysis for " + (costData.destination || '') + 
+           "\n\nTotal Trip Cost: $" + totalCost.toFixed(2) +
+           "\nCost per Person: $" + costPerPerson +
+           "\nTravel Style: " + (costData.budgetType || 'moderate') +
+           "\n\nRecommended Allocation:\n" +
+           "• Flights: 35-45%\n" +
+           "• Accommodation: 30-35%\n" +
+           "• Meals & Activities: 20%\n" +
+           "• Local Transport & Misc: 5-10%\n\n" +
+           "Money-Saving Tips:\n" +
+           "• Book flights 6-8 weeks in advance\n" +
+           "• Use budget airlines and off-peak flights\n" +
+           "• Consider mid-range hotels or guesthouses\n" +
+           "• Eat at local markets and bakeries\n" +
+           "• Use public transportation and city cards";
   }
 }
 

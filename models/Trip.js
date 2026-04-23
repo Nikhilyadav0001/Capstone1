@@ -9,6 +9,9 @@ const tripSchema = new mongoose.Schema({
   },
   budget: { type: Number },
   travelers: { type: Number, default: 1 },
+  accommodationType: { type: String, enum: ['economy', 'moderate', 'luxury'], default: 'moderate' },
+  budgetType: { type: String, enum: ['economy', 'moderate', 'luxury'], default: 'moderate' },
+  totalCost: { type: Number, default: 0 },
   costBreakdown: {
     flights: { type: Number, default: 0 },
     accommodation: { type: Number, default: 0 },

@@ -15,6 +15,14 @@
                 <i class="far fa-calendar"></i> <%= trip.dates.start.toLocaleDateString() %> - <%= trip.dates.end.toLocaleDateString() %>
                 <span style="margin: 0 1rem;">|</span>
                 <i class="fas fa-user-friends"></i> <%= trip.travelers %> Traveler(s)
+                <span style="margin: 0 1rem;">|</span>
+                <% if (trip.accommodationType === 'economy') { %>
+                    <span>🏩 Economy</span>
+                <% } else if (trip.accommodationType === 'luxury') { %>
+                    <span>👑 Luxury</span>
+                <% } else { %>
+                    <span>🏨 Moderate</span>
+                <% } %>
             </p>
         </div>
         
@@ -44,9 +52,14 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <h2>Itinerary</h2>
                     <% if (trip.itinerary && trip.itinerary.length === 0) { %>
-                        <button id="generateBtn" class="btn btn-primary">
-                            <i class="fas fa-wand-sparkles"></i> Generate AI Itinerary
-                        </button>
+                        <div style="display:flex; gap:0.75rem;">
+                            <button id="generateBtn" class="btn btn-primary">
+                                <i class="fas fa-wand-sparkles"></i> Generate AI Itinerary
+                            </button>
+                            <button id="analyzeCostBtn" class="btn btn-outline" title="Analyze trip cost with AI">
+                                <i class="fas fa-calculator"></i> Analyze Cost
+                            </button>
+                        </div>
                     <% } %>
                 </div>
 
@@ -107,6 +120,24 @@
                 <i class="fas fa-calculator" style="color: #22c55e; font-size: 1.3rem;"></i>
                 <h2>Trip Cost Analysis</h2>
             </div>
+            
+            <!-- Accommodation Type Badge -->
+            <% if (trip.accommodationType) { %>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="padding: 0.8rem 1.2rem; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 0.6rem;
+                    <%= trip.accommodationType === 'economy' ? 'background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e;' : 
+                        trip.accommodationType === 'luxury' ? 'background: rgba(236, 72, 153, 0.2); color: #ec4899; border: 1px solid #ec4899;' : 
+                        'background: rgba(99, 102, 241, 0.2); color: #6366f1; border: 1px solid #6366f1;' %>">
+                    <% if (trip.accommodationType === 'economy') { %>
+                        <span style="font-size: 1.2rem;">🏩</span> Economy Stay
+                    <% } else if (trip.accommodationType === 'luxury') { %>
+                        <span style="font-size: 1.2rem;">👑</span> Luxury Experience
+                    <% } else { %>
+                        <span style="font-size: 1.2rem;">🏨</span> Moderate Comfort
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
             
             <!-- Cost Breakdown Chart -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
@@ -240,6 +271,59 @@
             } catch (err) {
                 alert('Request failed');
                 generateBtn.disabled = false;
+            }
+        });
+    }
+
+    // ──── ANALYZE COST ACTION ────
+    const analyzeBtn = document.getElementById('analyzeCostBtn');
+    if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', async () => {
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+
+            // Determine totalCost (use trip.totalCost if available, otherwise sum breakdown)
+            const tripData = {
+                destination: '<%= trip.destination %>',
+                travelers: <%= trip.travelers %>,
+                budgetType: '<%= trip.budgetType || (trip.accommodationType || 'moderate') %>'
+            };
+
+            let totalCost = 0;
+            <% if (typeof trip.totalCost !== 'undefined' && trip.totalCost !== null) { %>
+                totalCost = <%= trip.totalCost %> || 0;
+            <% } else { %>
+                const _c = <%= JSON.stringify(trip.costBreakdown || {}) %>;
+                totalCost = (_c.flights||0) + (_c.accommodation||0) + (_c.food||0) + (_c.activities||0) + (_c.transportation||0) + (_c.other||0);
+            <% } %>
+
+            try {
+                const response = await fetch('/travel/analyze-cost', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        totalCost: parseFloat(totalCost),
+                        budgetType: tripData.budgetType,
+                        destination: tripData.destination,
+                        travelers: tripData.travelers
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    try { localStorage.setItem('lastCostAnalysis', data.analysis); } catch (e) {}
+                    // Redirect to dashboard where analysis will be shown
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to analyze cost'));
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.innerHTML = '<i class="fas fa-calculator"></i> Analyze Cost';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Request failed.');
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '<i class="fas fa-calculator"></i> Analyze Cost';
             }
         });
     }
