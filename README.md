@@ -384,6 +384,8 @@ This project is licensed under the **ISC License** — feel free to use it in yo
 
 **Made with ❤️ for secure authentication**
 
+Updated by: Deepesh Yadav
+
 [⬆ Back to Top](#-login--signup-platform)
 
 </div>
